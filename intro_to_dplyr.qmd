@@ -1,6 +1,6 @@
 ---
 title: "Introduction to dplyr"
-author: "Fabrice Rossi"
+author: "Moldovanu Laura"
 format: 
   revealjs:
     echo: false
@@ -58,4 +58,58 @@ diamonds |>
   filter(carat >= 2, carat <= 2.1) |>
   ggplot(aes(x=carat,y=price, group=carat)) +
   geom_violin()
+```
+## Using filter
+
+::::: columns
+::: column
+Filter is used as follows
+
+```{r}
+#| eval: false
+#| echo: true
+filter(dataframe,exp, exp2, exp3)
+```
+
+Interpretation: the code keeps rows of the data frame for which the expression evaluates to TRUE.
+:::
+
+::: column
+```{r}
+filter(diamonds, price == 1000, cut == "Ideal") |>
+  ggplot(aes(y=color)) + geom_bar()
+```
+
+:::
+:::::
+
+# Logical expression
+
+## Basic expression
+
+Evertything that compares two values and returns `TRUE` or `FALSE`.
+```{r}
+x <- 2
+x == 2
+x >= 3
+```
+## Logical operators
+
+Combining true value 
+
+```{r}
+#| echo: true
+TRUE & FALSE
+TRUE | FALSE
+!FALSE
+```
+## Examples
+
+Two different filter operations:
+
+```{r}
+#| echo: true
+#| eval: false
+diamonds |> filter(price == 1000, cut == "Ideal")
+diamonds |> filter((price == 1000) | (cut == "Ideal"))
 ```
