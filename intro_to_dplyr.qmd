@@ -405,3 +405,58 @@ diamonds |>
 - slice_tail : selects rows from the bottom of the data frame
 - slice_sample : selects  random sample of the rows (uniform distributions without replace by default)
 
+# Select
+
+## Select Principles
+
+The goal of the function is to select some of the variables in a data frame, based on the proprieties (position, name and content)
+
+The basic use leverages names:
+
+```{r}
+#| echo: true
+diamonds |> 
+  slice_tail(n=5) |>
+  select(carat, cut, price)
+```
+
+## Select with position
+
+Select can use columns indexes in a similar way to slice.
+
+```{r}
+#| echo: true
+diamonds |> 
+  slice_max(carat, by = color)
+  select(1:4, 7)
+```
+
+## Select by name proprieties
+
+Select can operate by looking at conditions on the names.
+
+```{r}
+#| echo: true
+diamonds |> 
+  slice_max(carat, n = 5) |>
+  select(starts_with("c"))
+```
+```{r}
+#| message: false
+library(readxl)
+credit_default <- read_excel(here("data", "default of credit card clients.xls"), skip = 1)
+```
+
+```{r}
+#| echo: true
+credit_default |> 
+  slice_max(LIMIT_BAL, n = 5) |>
+  select(starts_with("L"))
+```
+
+```{r}
+#| echo: true
+credit_default |> 
+  slice_max(LIMIT_BAL) |>
+  select(matches("PAY_[0-9]"))
+```
