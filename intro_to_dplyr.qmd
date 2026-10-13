@@ -327,7 +327,7 @@ filter(`price per carat` > large_ppc) |>
 ggplot(aes(x=`price per carat`, colour = cut)) + geom_density(bw="sj", linewidth = 1, alpha = 0.75) +
 geom_rug(alpha = 0.5)
 ```
-# Aplication to discrete data
+# Application to discrete data
 
 ## Visual conditional distributions
 
@@ -363,3 +363,45 @@ diamonds_cond_counts |>
 ```
 :::
 :::::
+
+# Slice
+
+## Slice Principles
+
+`filter` subsets 
+`slice`
+
+```{r}
+#| echo: true
+diamonds |>
+  slice(2:6)
+```
+
+## Slice variations
+
+```{r}
+#| echo: true
+diamonds |>
+  slice(1, .by = cut)
+```
+
+## Max and min
+
+```{r}
+#| echo: true
+diamonds |>
+  slice_min(price)
+```
+
+## Grouped max/min {.smaller}
+
+```{r}
+#| echo: true
+diamonds |>
+  slice_max(carat, by = cut)
+```
+## Other slice functions
+- slice_head : select rows  from the top of the data frame
+- slice_tail : selects rows from the bottom of the data frame
+- slice_sample : selects  random sample of the rows (uniform distributions without replace by default)
+
