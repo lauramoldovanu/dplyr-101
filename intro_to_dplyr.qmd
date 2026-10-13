@@ -221,7 +221,8 @@ diamonds|> filter(cut == "Ideal") |>  summarise(median_price = median(price))
 ## Graphical investigation
 
 ```{r}
-ggplot(diamonds, aes(x=price, colour = cut)) + geom_density(bw="sj", linewidth = 1, alpha = 0.75)
+ggplot(diamonds, aes(x=price, colour = cut)) + geom_density(bw="sj", linewidth = 1, alpha = 0.75) +
+geom_rug(alpha = 0.5)
 ```
 
 ## Additional statistics
@@ -282,3 +283,83 @@ diamonds_ppc <- diamonds |> mutate("price per carat" = price/carat)
 diamonds_ppc |> summarise(median(`price per carat`), .by=cut) |> arrange(cut)
 ```
 
+```{r}
+diamonds_ppc|> summarise(median = median(`price per carat`),
+                     mean = mean(`price per carat`),
+                     sd = sd(`price per carat`),
+                     IQR = IQR(`price per carat`),
+                     .by = cut) |> arrange(cut)
+```
+                    
+## Global extreme diamonds
+                 
+```{r}
+diamonds_ppc |>
+  filter(`price per carat` > 10000) |>
+slice(1:5) |>
+  select(1:6)
+```                
+          
+
+This selects diamonds with a price (per carat) larger than the average one +2 * sd(`price per carat`).
+
+```{r}
+diamonds_ppc |>
+  filter(`price per carat` > mean(`price per carat`))
+ggplot(diamonds, aes(x=price, colour = cut)) + geom_density(bw="sj", linewidth = 1, alpha = 0.5) +
+geom_rug(alpha = 0.5)
+```
+```{r}
+diamonds_with_stats <-
+diamonds_ppc |>
+  mutate(mean = mean(`price per carat`), sd = sd(`price per carat`), large_ppc = mean +2*sd)
+```
+
+```{r}
+diamonds_with_cond_stats <-
+diamonds_ppc |>
+  mutate(mean = mean(`price per carat`), sd = sd(`price per carat`), large_ppc = mean +2*sd, .by = cut)
+```
+
+```{r}
+diamonds_with_cond_stats |>
+filter(`price per carat` > large_ppc) |>
+ggplot(aes(x=`price per carat`, colour = cut)) + geom_density(bw="sj", linewidth = 1, alpha = 0.75) +
+geom_rug(alpha = 0.5)
+```
+# Aplication to discrete data
+
+## Visual conditional distributions
+
+```{r}
+diamonds |>
+  ggplot(aes(x=cut, fill=color)) +
+  geom_bar(position="fill")
+```
+# Conditional frequencies {.smaller}
+
+
+::::: columns
+:::(.column width="40%")
+```{r}
+#| echo: true
+diamonds_counts <-
+  diamonds|>
+  summarise(n(), .by=c(cut, color))
+```
+
+```{r}
+#| echo: true
+diamonds_cond_counts <-
+diamonds_counts |> mutate(freq = `n()`/sum(`n()`), .by=cut)
+```
+:::
+
+::: (.column width="60%")
+
+```{r}
+diamonds_cond_counts |>
+  slice(1:5)
+```
+:::
+:::::
