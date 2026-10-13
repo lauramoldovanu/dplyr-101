@@ -261,3 +261,24 @@ diamonds |> ggplot(aes(x=cut, fill=color)) + geom_bar(position="fill")
 ```{r}
 diamonds |> summarise(n(), .by=c(cut,color)) |> arrange(cut, color) |> slice(1:5)
 ```
+
+# Operate on columns
+## Introduction to mutate
+
+The mutate verb is used to create new columns (or to monify existing ones) based on calculation conducted on existing columns. General form:
+
+```{r}
+#| echo: true
+#| eval: false 
+mutate(dataframe, newcolumn = expression)
+```
+
+```{r}
+#| echo: true
+diamonds_ppc <- diamonds |> mutate("price per carat" = price/carat)
+```
+
+```{r}
+diamonds_ppc |> summarise(median(`price per carat`), .by=cut) |> arrange(cut)
+```
+
